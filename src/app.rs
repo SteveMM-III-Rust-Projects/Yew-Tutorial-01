@@ -27,7 +27,7 @@ impl Component for App {
   fn update(&mut self, msg: Self::Message) -> ShouldRender {
     match msg {
       Msg::AddOne => self.counter += 1,
-      Msg::RemoveOne => self.counter -= 1,
+      Msg::RemoveOne => self.counter -= if self.counter == 0 { 0 } else { 1 },
     }
 
     return true;
