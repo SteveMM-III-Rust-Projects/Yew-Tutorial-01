@@ -1,4 +1,5 @@
 use yew::prelude::*;
+use rand::prelude::*;
 
 
 pub enum Msg {
@@ -8,9 +9,11 @@ pub enum Msg {
 
 
 pub struct App {
+  items: Vec<i64>,
   counter: i64,
   link: ComponentLink<Self>,
 }
+
 
 impl Component for App {
   type Message = Msg;
@@ -19,6 +22,7 @@ impl Component for App {
   fn create( _: Self::Properties, link: ComponentLink<Self> ) -> Self {
     return App {
       link,
+      items: Vec::new(),
       counter: 0,
     };
   }
@@ -26,8 +30,11 @@ impl Component for App {
 
   fn update(&mut self, msg: Self::Message) -> ShouldRender {
     match msg {
-      Msg::AddOne => self.counter += 1,
-      Msg::RemoveOne => self.counter -= if self.counter == 0 { 0 } else { 1 },
+      Msg::AddOne => {self.counter += 1; self.items.push( random() );},
+      Msg::RemoveOne => {
+        self.counter -= if self.counter == 0 {0} else {1};
+        self.items.pop();
+      }
     }
 
     return true;
@@ -35,14 +42,24 @@ impl Component for App {
 
 
   fn view( &self ) -> Html {
+    let render_item = |item| {
+      html! {
+        <li> {item} </li>
+      }
+    };
     return html! {
-      <div>
-        <p> {"Counter: "} { self.counter } </p>
+      <div class="app center">
+        <p> {"Number of items: "} { self.counter } </p>
+        <p> {"Items: "}</p>
+        <ul>
+          { for self.items.iter().map( render_item ) }
+        </ul>
         <button onclick=self.link.callback( |_| Msg::AddOne )>{ "+" }</button>
         <button onclick=self.link.callback( |_| Msg::RemoveOne )>{ "-" }</button>
       </div>
     };
   }
+
 
   fn change(&mut self, _props: Self::Properties) -> ShouldRender {
     return true;
