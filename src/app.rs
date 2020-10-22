@@ -1,11 +1,13 @@
 use rand::prelude::*;
 use yew::prelude::*;
 use yew::services::ConsoleService as console;
+use yew::services::DialogService as dialog;
 
 
 pub enum Msg {
    AddOne,
    RemoveOne,
+   About,
 }
 
 
@@ -45,7 +47,9 @@ impl Component for App {
                Some(x) => console::warn( format!( "Removed {}", x ).as_str() ),
                None    => console::error( "Nothing to remove!" )
             }
-            
+         }
+         Msg::About => {
+            dialog::alert( "training app" )
          }
       }
 
@@ -69,8 +73,18 @@ impl Component for App {
                { for self.items.iter().map( render_item ) }
             </ul>
 
-            <button onclick=self.link.callback( |_| Msg::AddOne    )>{ "+" }</button>
-            <button onclick=self.link.callback( |_| Msg::RemoveOne )>{ "-" }</button>
+            <div class="add-remove">
+               <button onclick=self.link.callback( |_| Msg::AddOne    )>
+                  { "+" }
+               </button>
+               <button onclick=self.link.callback( |_| Msg::RemoveOne )>
+                  { "-" }
+               </button>
+            </div>
+
+            <button class="about" onclick=self.link.callback(|_| Msg::About )>
+               { "About" }
+            </button>
          </div>
       };
    }
