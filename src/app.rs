@@ -1,12 +1,57 @@
-use rand::prelude::*;
+//use rand::prelude::*;
+use wasm_bindgen::prelude::*;
 use yew::prelude::*;
+use yew::format::Json;
 use yew::services::ConsoleService as console;
 use yew::services::DialogService as dialog;
+use yew::services::storage::Area;
+use yew::services::StorageService;
+use serde::{ Deserialize, Serialize };
+
+
+const KEY: &'static str = "yew.tut.database";
+
+
+#[derive(Serialize, Deserialize)]
+pub struct Database {
+   tasks: Vec<Task>,
+}
+
+
+impl Database {
+   pub fn new() -> Self {
+      return Database {
+         tasks: Vec::new()
+      }
+   }
+}
+
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Task {
+   title: String,
+   description: String,
+}
+
+
+impl Task {
+   pub fn new() -> Self {
+      return Task {
+         title: "".to_string(),
+         description: "".to_string(),
+      };
+   }
+
+
+   pub fn is_filled_in( &self ) -> bool {
+      return ( self.title != "" ) && ( self.description != "" );
+   }
+}
 
 
 pub enum Msg {
-   AddOne,
-   RemoveOne,
+   AddTask,
+   RemoveTask,
    About,
 }
 
@@ -34,13 +79,13 @@ impl Component for App {
 
    fn update( &mut self, msg: Self::Message ) -> ShouldRender {
       match msg {
-         Msg::AddOne => {
+         Msg::AddTask => {
             let added = random();
             self.counter += 1;
             self.items.push( added );
             console::info( format!( "Added {}", added ).as_str() );
          }
-         Msg::RemoveOne => {
+         Msg::RemoveTask => {
             self.counter -= if self.counter == 0 { 0 } else { 1 };
             let removed = self.items.pop();
             match removed {
@@ -74,10 +119,10 @@ impl Component for App {
             </ul>
 
             <div class="add-remove">
-               <button onclick=self.link.callback( |_| Msg::AddOne    )>
+               <button onclick=self.link.callback( |_| Msg::AddTask    )>
                   { "+" }
                </button>
-               <button onclick=self.link.callback( |_| Msg::RemoveOne )>
+               <button onclick=self.link.callback( |_| Msg::RemoveTask )>
                   { "-" }
                </button>
             </div>
