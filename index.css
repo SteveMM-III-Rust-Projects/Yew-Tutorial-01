@@ -42,3 +42,6 @@ html {
  .card-desc {
    padding: 5px 20px;
  }
+ .fa:before {
+    padding: 4px;
+ }
