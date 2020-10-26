@@ -1,6 +1,7 @@
 #![recursion_limit = "1024"]
 
 mod app;
+mod js_funcs;
 
 use wasm_bindgen::prelude::*;
 use app::App;
