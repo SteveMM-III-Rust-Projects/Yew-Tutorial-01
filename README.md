@@ -11,7 +11,7 @@ https://dev.to/davidedelpapa/yew-tutorial-04-and-services-for-all-1non
 ```
 cargo install wasm-pack
 nmp install --global rollup
-cargo new --lib yew-tutorial
+download zip & extract
 ```
 ---
 <br />
